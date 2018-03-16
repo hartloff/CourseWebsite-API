@@ -34,7 +34,7 @@ router.get('/course-list', function (req, res) {
 				var raw_course = data[i];
 				var course = {};
 
-				copy_course_fields(raw_course, course);
+				copy_course_fields(course, raw_course);
 
 				to_send.push(course);
 			}
@@ -46,7 +46,7 @@ router.get('/course-list', function (req, res) {
 });
 
 
-function copy_course_fields(raw_course, destination) {
+function copy_course_fields(destination, raw_course) {
 	destination.course_id = raw_course.course_id;
 	destination.course_number = raw_course.course_number;
 	destination.semester = raw_course.semester;
@@ -91,25 +91,22 @@ function copy_course_fields(raw_course, destination) {
  }
  */
 router.get('/course/:course_id', function (req, res) {
-	var to_send = {};
-
-	collection.findOne({course_id: req.params.course_id}, {}, function (err, raw_course) {
-		if (err || !data) {
+	collection.findOne({course_id: req.params.course_id}, {_id:0, semester_index:0}, function (err, raw_course) {
+		if (err || !raw_course) {
 			var message = "Error getting data for course " + req.params.course_id + ": " + JSON.stringify(err);
 			console.log(message);
 			res.send(message);
 		} else {
-			//console.log(JSON.stringify(data, null, 2));
-
-			copy_course_fields(raw_course, to_send);
-			to_send.modules = raw_course.modules;
-			to_send.all_content = {};
-			//raw_course.all_content;
-
-			res.send(JSON.stringify(to_send));
+			for (var content_type_index = 0; content_type_index < raw_course.all_content.length; content_type_index++) {
+				var type_content = raw_course.all_content[content_type_index].content;
+				for (var content_index = 0; content_index < type_content.length; content_index++) {
+					var content = type_content[content_index];
+					delete content.sections;
+				}
+			}
+			res.send(JSON.stringify(raw_course));
 		}
 	});
-
 });
 
 

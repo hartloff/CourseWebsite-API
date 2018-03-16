@@ -40,8 +40,8 @@ var to_process = [
 
 var semesters = ['f17', 's18'];
 
-collection.remove({}, function (err, content) {
-	collection_list.remove({}, function (err, content2) {
+collection.remove({}, function () {
+	collection_list.remove({}, function (err) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -62,7 +62,7 @@ collection.remove({}, function (err, content) {
 						case "options":
 							var course_content = fs.readFileSync(directory + "/options/course.json");
 							var course_settings = JSON.parse(course_content);
-							course.modules = course_settings;
+							course.modules = {name:"artifact", settings:course_settings};
 							break;
 						default:
 							read_directory(course, directory + "/" + sub_directory + "/", sub_directory);
@@ -143,13 +143,17 @@ function read_directory(course, directory, type) {
 		if (variables.hasOwnProperty("next_content_short")) {
 			ordered = true;
 		}
+		if (variables.hasOwnProperty("page_type")) {
+			variables.type = variables.page_type;
+			delete variables.page_type;
+		}
 		if (variables.hasOwnProperty("short_title")) {
 			variables.content_id = variables.short_title;
 		} else {
 			variables.content_id = file.split(".")[0]; // meh
 		}
 
-		all_content.push(Object.assign(variables, {'sections': sections}));
+		all_content.push(Object.assign(variables, {'sections': sections, referenced_sections:[]}));
 	}
 
 	var result = [];
