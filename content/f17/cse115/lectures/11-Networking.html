@@ -1,0 +1,394 @@
+---
+title: Networking
+short_title: internet
+next_content_short: json
+previous_content_short: gui
+---
+
+
+[Monday - Protocols, HTTP, the Internet. Introduce the library. HTTP GET]
+[Wednesday - Make an HTTP POST request]
+[Friday - Examples. OAuth?]
+
+
+== The Internet
+
+<p>
+    We've seen many of the capabilities of computers and programming in this course, but realistically
+</p>
+
+<h4>
+    the Internet is the reason why we carry computers in our pockets and backpacks.
+</h4>
+
+<p>
+    Computers are significantly less interesting without the ability to connect to the Internet. Let's
+    write code that connects our computers to the Internet.
+</p>
+
+
+== HTTP
+
+<p>
+    HyperText Transfer Protocol. The language of the Internet.
+</p>
+
+
+<p>
+    The Internet is massive collection of devices connected to the same network. Any device can send messages to any
+    other connected device. Devices that are listening for messages are called servers, while devices sending messages
+    and called clients. With so many devices "talking" to each other there is a need to standardize the way they
+    communicate. Enter HTTP.
+</p>
+
+<p>
+    HTTP is the protocol used to send messages between clients and servers. Each server on the Internet will be
+    listening for HTTP requests from any client on the Internet. The full details of HTTP could fill an entire course,
+    though for this course we will cover only 2 aspects of HTTP.
+</p>
+
+<dl>
+    <dt>
+        HTTP GET Request
+    </dt>
+    <dd>
+        A client will send a GET request to ask a server to send data back to the client in response. Every time we
+        click a link we are sending a GET request to the server specified by that link. The response from the server is
+        the requested web page.
+    </dd>
+    <dt>
+        HTTP POST Request
+    </dt>
+    <dd>
+        A client sends a POST request to send data to a server. POST requests are commonly use in web forms. When we
+        fill out a form and click send, we are sending a POST request to a server containing the information we entered
+        into the form.
+    </dd>
+</dl>
+
+<p>
+    With these two types of requests we can ask a server for information and send information to a server. This enables
+    2-way communication over the Internet.
+</p>
+
+
+== Java Libraries
+
+<p>
+    Java itself, along with any programming language, does not have many directly useful features. Java provides the
+    means for us to create variables and arrays of variables, control program flow with conditionals and loops, create
+    classes and methods, and gives us a way to define a main method as a starting point for the execution of our code.
+    These features are essential to the language, but with only these features it would be difficult to write useful
+    programs. We would all find ourselves writing basic functionality that most developers will need. To save time we
+    could share the classes and methods we write with others so they don't have to rewrite the same common
+    functionality. This idea of sharing code is the fundamental concept behind libraries and a library is simply a
+    collection of code that has been shared by its author(s).
+</p>
+
+<p>
+    The most prominent library java code is the JRE System Library. This is the standard library for the language and it
+    contains every class we've use so far in this course (String, ArrayList, HashMap, Files, Paths, Collections, etc).
+    None of
+    these classes are fundamentally part of the language and it would be possible to write a java program that doesn't
+    use the JRE System Library at all. However, it's extremely useful to use this library instead writing a program from
+    complete scratch. The authors of these classes made them available to us for free. Let's make use of them!
+</p>
+<p>
+    In eclipse you can see the JRE System Library in your project folder and you can explore the multitudes of classes
+    provided to us. Most of the common features we want are included in this library, but what if we want to do
+    something that isn't built-in to this library? The straight-forward answer is "write it yourself", but this can be
+    tedious at best if we're always writing programs that only use classes built-in to the JRE. In this section we will
+    explore an alternate solution to writing everything ourselves. We will import libraries written by other developers
+    and use their classes instead of writing our own.
+</p>
+
+
+== External Libraries
+
+<p>
+    We will use external libraries to use classes written by other developers. To do this we will import jar (Java
+    ARchive) files that contain the classes we want to use. When a developer wants to release their code for other to
+    use they can create a jar file of all their classes and share this archive, as opposed to sharing their .java files
+    individually. We will add these jar files to our projects as external libraries and we'll have all the contained
+    classes available in our programs. These classes can be used just the same as if the .java files were in the project
+    directly, or if they were in the JRE library. There's no magic here. We're merely injecting someone else's classes
+    into our program.
+</p>
+
+<p>
+    Side note: When a program uses many external libraries it is useful to use build tools such as Maven, ant, or
+    Groovy, but we will import the jar files directly in this course.
+</p>
+
+== Packages
+
+<p>
+    When adding external libraries it is important to be aware of the packages contained in these libraries. Packages
+    are
+    a way of organizing classes and functions similar to directory structures in a filesystem. Thus, the package is the
+    location of a class. Using the package name along with the class name in called the classes fully-qualified name.
+    This may seem a bit abstract so let's look at an example.
+</p>
+
+<p>
+    We've been using the Class <code>ArrayList</code> throughout this course. This class is located in the package
+    <code>java.util</code> making its fully-qualified name <code>java.util.ArrayList</code>. We can use ArrayLists with
+    this fully-qualified name, but we commonly <code>import</code> the class and call it by its class name only. By
+    adding the line <code>import java.util.ArrayList;</code> before our class definition we can use
+    <code>ArrayList</code>
+    without specifying it's package every time we use it. This is not required and the following is a valid complete
+    program with no imports.
+</p>
+
+<pre><code class="java">
+public class NoImports{
+
+    public static void main(String[] args){
+        java.util.ArrayList&lt;Integer&gt; numbers = new java.util.ArrayList&lt;&gt;();
+        numbers.add(3);
+        numbers.add(6);
+        System.out.println(numbers.size());
+    }
+
+}
+</code></pre>
+
+<p>
+    Though we tend to prefer the following:
+</p>
+
+<pre><code class="java">
+import java.util.ArrayList;
+
+public class WithImport{
+
+    public static void main(String[] args){
+        ArrayList&lt;Integer&gt; numbers = new ArrayList&lt;&gt;();
+        numbers.add(3);
+        numbers.add(6);
+        System.out.println(numbers.size());
+    }
+
+}
+</code></pre>
+
+
+<p>
+    When using external libraries we have the same choice, though we do need to check the library to know which packages
+    contain the classes we want to use. We can either import them and use the class name, or skip the import and use the
+    fully-qualified name but either way we have to tell our program where to find the classes we want to use.
+</p>
+
+
+
+<!--== CSE115 Library-->
+
+<!--<p>-->
+    <!--For the assignments this week we will use the CSE115 library. This is a small library with 3 classes:-->
+<!--</p>-->
+
+<!--<dl>-->
+    <!--<dt>cse115.math.NormalDistribution</dt>-->
+    <!--<dd>Instances of this class store the mean and standard deviation of a normal distribution and contains a method to-->
+        <!--determine the z-score of a provided value.-->
+    <!--</dd>-->
+    <!--<dt>cse115.math.Polynomial</dt>-->
+    <!--<dd>Objects of this class represent polynomials and contain several methods to analyze them.-->
+    <!--</dd>-->
+    <!--<dt>cse115.words.Words</dt>-->
+    <!--<dd>This class is a collection of static methods used for analyzing and comparing words. This class uses the CMU-->
+        <!--pronunciation dictionary and the Princeton parts of speech dictionaries for it's methods.-->
+    <!--</dd>-->
+<!--</dl>-->
+
+
+<!--<p>-->
+    <!--*** If you don't understand some of the concepts in this library you can still complete the assignments this week.-->
+    <!--A major advantage of using libraries is that you don't have to know how they work. If a question asks you to return-->
+    <!--a z-score and you find a method in a library that computes z-score, you can call that method with knowing a single-->
+    <!--thing about statistics. We have been taking advantage of this powerful idea throughout the semester. You don't need-->
+    <!--to understand how an ArrayList or HashMap is coded to use them to store values, You don't have to understand file-->
+    <!--systems to call Files.readAllLines, and next week you won't need to understand how the Internet works to make an-->
+    <!--HTTP request. Abstracting out these low-level details is what allows us to write complex programs.-->
+<!--</p>-->
+
+<!--<p>-->
+    <!--For the assignments this week you must look through these classes and read the methods that have been implemented,-->
+    <!--then call the methods needed to answer each question.-->
+<!--</p>-->
+
+
+== The Library
+
+<a href="https://hc.apache.org/">https://hc.apache.org/</a>
+
+<p>
+    We will use Apache's HttpComponents library to help us make HTTP requests over the Internet. This library contains
+    a multitude of classes to explore, though we will only need to use a few of these for our purposes in this course.
+</p>
+
+<p>
+    An Eclipse project with this library setup has been provided at:
+</p>
+<p>
+    ssh://ubit@timberlake.cse.buffalo.edu/projects/CSE115/Repositories/Fall2017/Networking
+</p>
+
+== HTTP GET
+
+<p>
+    To make an HTTP GET request using the Apache HttpComponents library we will use the following method. This method
+    can be used directly in all of your assignments. This is one case where you can cut and paste this code wherever you
+    need it.
+</p>
+
+
+<pre><code class="java">
+public static String getRequest(String url){
+    String response = "";
+
+    try{
+        response = Request.Get(url).execute().returnContent().asString();
+    }catch(IOException ex){
+        ex.printStackTrace();
+    }
+
+    return response;
+}
+</code></pre>
+
+<p>
+    This method will use the library to connect to a url (link). The Request class from the library is used to send a
+    GET
+    request to the url and return the response as a String. As with files, connecting to a website can go wrong (ex. if
+    an invalid link is used), so the method calls are wrapped in a try/catch block.
+</p>
+
+<p>
+    Notice that 4 method calls are chained together in this method. This is a way of calling a method on the returned
+    value of another method without having to store the intermediate results in variables. The static method Get
+    returns an object of type Request which has a non-static method named execute which returns an object of type
+    Response which has a non-static method named returnContent which returns an object of type Content which has a
+    non-static method named asString. Through these calls the Request is created, executed to obtain a Response from the
+    server, the Content is extracted from the response, then the Content is converted to a String which is returned to
+    us for further processing.
+</p>
+
+== HTTP POST
+
+<p>
+    Similar to the get method this method will send a POST request with the provided params to the provided url. The
+    params String is the data to be sent to the server identified by the url. This method
+    can be used directly in all of your assignments. This is one case where you can cut and paste this code wherever you
+    need it.
+</p>
+
+<pre><code class="java">
+public static String postRequest(String url, String params, boolean json){
+    String response = "";
+    try{
+        ContentType type = ContentType.DEFAULT_TEXT;
+        if(json){
+            type = ContentType.APPLICATION_JSON;
+        }
+        response = Request.Post(url).bodyString(params, type).execute().returnContent().asString();
+    }catch(IOException ex){
+        ex.printStackTrace();
+    }
+    return response;
+}
+</code></pre>
+
+<p>
+    This method is written in much the same way as the get method with only a few differences. First, the method calls
+    are on separate lines which is a matter of formatting. It can be easier to read chained method calls if they
+    are on separate lines and this is still valid syntax. Second, there is a call to bodyString which adds our params to
+    the POST request in the format expected by the server (The format used by HTTP).
+</p>
+
+<p>
+    Most of this code will be the same every time you use this method, but you must specify the content type to match
+    the type of information being sent. When we start sending JSON strings in HTTP POST requests we will change this
+    value to ContentType.APPLICATION_JSON. This will tell the server how to handle the request. If the wrong content
+    type is used the request might not be handled as expected.
+</p>
+
+<p>
+    More details on the origin of these two methods can be found here: <a
+        href="https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html">https://hc.apache.org/httpcomponents-client-ga/tutorial/html/fluent.html</a>
+</p>
+
+
+== Web API's
+
+<p>
+    We typically interact with the internet by making HTTP GET
+    requests
+    through a web browser. The response of these GET requests is a mix of HTML, CSS, and JavaScript that tells
+    the browser how to display the requested web page. These pages can contain links that we click to make a GET request
+    for another page, or forms with buttons that make POST requests containing the data we enter. But what if want to
+    interact with the Internet through the software we've written? What if we want to write a bot to automate posts on
+    social
+    media, an
+    app to get the current weather and notify us if it's going to rain soon, display only text from blog posts without
+    all the clutter, or watch the current bid on an online auction. All of these are possible with a little work, but it
+    can be tedious to write code that reads pages made for humans. If you are interested in these applications search
+    for tutorials about web crawlers and explore what you can do with you new programming skills.
+</p>
+
+<p>
+    We won't explore web crawlers in this course, but there is another way to write software for the Internet by using
+    Web APIs. A web API is a web application hosted on a server that is designed to be used directly through
+    software instead of
+    viewed in a browser. To this end, when a web API receives an HTTP request the response will only contain the
+    requested data without complex formatting. This raw data will be in a standardized format that is easily parsed with
+    software (ex. CSV, JSON). A web API will not return HTML, CSS, or Javascript. If it did, it would be a
+    web site intended to be viewed through a browser. We will connect to web APIs via java programs to communicate over
+    the Internet.
+</p>
+
+
+== Query Strings
+
+<p>
+    Some pages are setup to take arguments in the page's url to be used with a GET request. These arguments are
+    contained in a part of the url called
+    the query string. Query strings are used so a singe web page can display a wide variety of different content without
+    using different paths (note: many sites simply use different paths for this purpose). When
+    the page is served a different version of the page is sent based on the specific query provided, though most of the
+    page is typically the same and the same code is executed on the server for different queries. Let's look at an
+    example to see how this works.
+</p>
+
+<h4>https://www.youtube.com/watch?v=5jmN_tBS0t4</h4>
+
+<p>
+    This string represents a url for a YouTube video. If we break it into it's different parts we can see that it will
+    send a request using the https protocol (an encrypted http request) to the server(s) named "www.youtube.com" at the
+    path "/watch" with the query string "v=5jmN_tBS0t4". To append a query string to a url we use a single question
+    mark. The server will look for this question mark and interpret everything after it as the query string. The query
+    string itself will contain any number of key-value pairs separated by &'s. In this example we have 1 key (v) with
+    the value (5jmN_tBS0t4). This tells youtube that you want to watch the video with the video ID "5jmN_tBS0t4" and the
+    server will respond with the usual YouTube interface with this specific video in the player, along with
+    recommendations related (or unrelated in some cases) to this video.
+</p>
+
+<h4>
+    https://www.google.com/search?q=cats&as_filetype=gif&lr=lang_ja
+</h4>
+
+<p>
+    This is an example of a query string containing multiple key-value pairs. In this case we have three pairs:
+</p>
+
+<ul>
+    <li>The key "q" (query) contains the value "cats"</li>
+    <li>The key "as_filetype" contains the value "gif"</li>
+    <li>The key "lr" contains the value "lang_ja"</li>
+</ul>
+
+<p>
+    Interpreting this query, we are requesting a Google search for gifs of cats from web sites that are in Japanese.
+    (For more information about Google search parameters see <a
+        href="https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters">https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters</a>)
+</p>

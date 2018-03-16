@@ -1,0 +1,311 @@
+---
+title: Word Play 3
+short_title: hw2
+next_content_short: hw3
+previous_content_short: hw1
+---
+
+
+== Background
+
+
+<p>
+This is the first part of our Word Play homework.  By the end of the
+semester we will have built our own simple version of a popular word
+game called TextTwist2.  TextTwist2 is a game in which you create
+words from the letters in a given seven-letter word.  For example, if
+we pick "smooths" as our reference word we can form words such as
+"moth", "moths", "moot", "soot", "hot", "toss", etc.
+</p>
+
+<p>
+There are several websites where you can play this game, including:
+<a href="https://www.mindgames.com/game/TextTwist+2">https://www.mindgames.com/game/TextTwist+2</a>
+<a href="http://zone.msn.com/en/texttwist2">http://zone.msn.com/en/texttwist2</a>
+<a href="http://www.agame.com/game/texttwist-2">http://www.agame.com/game/texttwist-2</a>
+You can probably find others.  Read the instructions for the game, and
+try it out, so you have a better understanding of what you're aiming
+for.  Our rules may be a little different in the end, so don't get too
+hung up on the specific rules (especially if you look at several
+different websites).
+</p>
+
+
+== Part 3
+
+<h4>Due:</h4>
+<p>
+    <strong>Wednesday, November 29 @ <strike>8:00 AM</strike> 8:00 PM</strong>
+</p>
+<p>
+We are giving you a little more time to make up for the missed
+opportunities to visit office hours during Thanksgiving week.  Also,
+the class on Monday, November 20 will be devoted to homework Q & A, so
+come prepared with questions!
+</p>
+<hr/>
+
+<h4>Repository Link:</h4>
+<p>
+    <strong>ssh://ubit@timberlake.cse.buffalo.edu/projects/CSE115/Repositories/Fall2017/HW2_Part3</strong>
+</p>
+<p>
+    Use the link above and follow the same procedure as you have for the coding exercises in lab.
+    (<a href="https://www.youtube.com/watch?v=hiij77tpDM4">https://www.youtube.com/watch?v=hiij77tpDM4</a>)
+    Remember to replace "ubit" in the above URI with <i>your UBIT name</i>,
+</p>
+<p>
+
+</p>
+
+<hr/>
+<h4>Estimated Time:</h4>
+<p>
+    <strong>8 hours (over two weeks) for basic functionality (4 points)</strong>
+    <strong>? hours (over two weeks) for extra credit functionality (2 points)</strong>
+</p>
+
+<hr/>
+
+
+<h4>Description</h4>
+<p>
+    In this part of Word Play we will bolt on a graphical user interface to the game.  The repository
+    contains a runnable JAR file name DEMO.jar.  If you double-click on this in the package explorer it 
+    will run a solution that shows you what the finished product should look and behave like.
+</p>
+<p>
+    It is important that you run the demo and explore its behavior -
+    for example, there is an extra panel that provides feedback to the
+    player when a guess is submitted.  Your submission must provide
+    that feedback too.  Note that this functionality may require you
+    do add code beyond that which is sketched through the various
+    stubbed out methods provided to you.
+</p>
+<h5>4 proficiency points</h5>
+<p>
+Build the game to the same level of functionality and performance as
+the provided demo.  There will be autograding for these proficiency
+points.
+</p>
+
+<h5>2 extra-credit proficiency points</h5> 
+<p>
+If your submission scores 4 points on autograding you may make a
+submission for manual grading of additional functionality.  Each extra
+credit item succesfully completed will earn 0.5 additional proficiency
+points.
+</p>
+<dl>
+<dt>Configuration file</dt><dd>Enhance the game so that, on startup,
+it reads data from a JSON file named "HW2.config", appearing as a
+sibling of the dictionaries folder on the file system:
+<pre>
+{
+  "minWordLength" : 3,
+  "mxnWordLength" : 7,
+  "fontSize" : 44,
+  "maxWordPerTurn" : 24
+}
+</pre>
+minWordLength - the minimum length of any of the words the player
+needs to find.  Regardless of the value in the configuration file, the
+minimum word length must never be less than 3 and can never be larger
+than the maximum word length.  If no minimum word length is specified
+in the file the default value is 3.
+
+maxWordLength - the maximum length of any of the words the player
+needs to find.  Regardless of the value in the configuration file, the
+maximum word length must never be less than the mimimum word length.
+If no maximum word length is specified in the file the default value
+is 7.
+
+fontSize - the font sized use for all text in the user interface.  If
+no default value is specified then 44 is used.
+
+maxWordPerTurn - the maximum number of words to put in the list of
+words the user has to guess.  This provides an upper bound.
+Regardless of the value in the configuration file, the maximum number
+of words per turn must be no less than 5.  If, for a given seed word,
+the number of possible words is greater than maxWordsPerTurn, the game
+must populate _wordToFind with the specified maximum number of words.
+If not default value is specified then the maximum number of words is
+unlimited.
+</dd>
+
+<dt>High scores</dt><dd>Implement a version of the game in which each
+word found counts for as many points as there are letters in the word.  On startup,
+the game reads data from a JSON file named "HW2.scores", appearing as a
+sibling of the dictionaries folder on the file system.  Here's a sample structure for this file:
+<pre>
+{
+ "194" :   ["bookWorm"] ,
+ "192" :   ["ardelia"] ,
+ "188" :   ["sam","wolfgang"] ,
+ "187" :   ["sally"]
+}
+</pre>
+At the end of the player's turn, their score is the total points for
+the all words they found.  Keep a file (JSON again) of the top ten
+high scores.  At the start of each game have the user specify a name
+for themselves.  Load and display any scores in the high score file in
+a separate JPanel in the user interface.  Add a "resign" button so
+that a player can end a turn before finding all the words.  At the of
+a player's turn add their name and their score to the high score file
+if their score was among the top ten.  Drop any scores past the tenth
+best score from the file.  Allow ties, so that all players who
+achieved one of the top ten scores will be listed (see the two names
+for the score 188 in the example, above).</dd>
+
+<dt>Timed play</dt><dd>Implement a version of the game in which the
+player has a limited amount of time to find words.  See
+the <a href="https://docs.oracle.com/javase/tutorial/uiswing/misc/timer.html">Swing
+Timer documentation</a> for help on how to use a timer to trigger an
+event.  Allow 60 seconds for a player to complete their turn.  The
+time left must be displayed prominently in the Graphical User
+Interface.</dd>
+
+<dt>Levels</dt><dd>Implement a version of the game in which, once a
+level is completed, a new level is presented to the user.  A player
+need not find all the words on a level to advance; a player advances
+to the next level if they find at least one of the maximum length
+words.</dd>
+
+</dl>
+
+
+<hr/>
+<h4>Testing</h4>
+<p>
+    We again provide a Driver class that you can use for some manual testing of your code.
+</p>
+
+<hr/>
+<h4>Submission</h4>
+<p>
+    Submit a jar file of your project
+    under <a href="https://autograder.cse.buffalo.edu/courses/cse115-f17/assessments/wordplaypart3">Word
+    Play - Part 3</a> on AutoLab.  Remember to check the correct boxes
+    in the jar file export dialog.
+</p>
+<p>
+    Autograding for the basic part of the assignment (the first 4
+    points) will be available on AutoLab no later than Wednesday
+    November 15.
+</p>
+<p>
+    If you score 4 points on the autograded portion of this homework
+    you can make a separate jar file submission
+    under <a href="https://autograder.cse.buffalo.edu/courses/cse115-f17/assessments/wordplaypart3extra">Word
+    Play - Part 3 - extra</a> on AutoLab.  There is no autograding of
+    the extra credit.  Instead, it will be manually graded.  This will take time.  Be patient.
+</p>
+
+
+
+== Part 2
+
+<h4>Due:</h4>
+<p>
+    <strong>Monday, October 23 @ 8:00am</strong>
+</p>
+<hr/>
+
+<h4>Repository Link:</h4>
+<p>
+    <strong>ssh://ubit@timberlake.cse.buffalo.edu/projects/CSE115/Repositories/Fall2017/HW2_Part2</strong>
+</p>
+<p>
+    Use the link above and follow the same procedure as you have for the coding exercises in lab.
+    (<a href="https://www.youtube.com/watch?v=hiij77tpDM4">https://www.youtube.com/watch?v=hiij77tpDM4</a>)
+    Remember to replace "ubit" in the above URI with <i>your UBIT name</i>,
+</p>
+
+<hr/>
+<h4>Estimated Time:</h4>
+<p>
+    <strong>6 hours</strong>
+</p>
+
+<hr/>
+
+
+<h4>Description</h4>
+<p>
+    In this part of Word Play we will build out more of the game.  In
+    the third part we will build a graphical user interface that will
+    complete the game.
+</p>
+
+<hr/>
+<h4>Testing</h4>
+<p>
+    We again provide a Driver class that you can use for some manual
+    testing of your code.
+</p>
+
+<hr/>
+<h4>Submission</h4>
+<p>
+    Submit a jar file of your project under "Word Play - Part 2" on
+    <a href="https://autograder.cse.buffalo.edu/courses/cse115-f17/assessments/wordplaypart2">AutoLab</a>.
+    Remember to check the correct boxes in the jar file export dialog.
+</p>
+
+== Part 1
+
+<h4>Due:</h4>
+<p>
+    <strong>Monday, October 2 @ 8:00am</strong>
+</p>
+<hr/>
+
+<h4>Repository Link:</h4>
+<p>
+    <strong>ssh://ubit@timberlake.cse.buffalo.edu/projects/CSE115/Repositories/Fall2017/HW2_Part1</strong>
+</p>
+<p>
+    Use the link above and follow the same procedure as you have for the coding exercises in lab.
+    (<a href="https://www.youtube.com/watch?v=hiij77tpDM4">https://www.youtube.com/watch?v=hiij77tpDM4</a>)
+    Remember to replace "ubit" in the above URI with <i>your UBIT name</i>,
+</p>
+
+<hr/>
+<h4>Estimated Time:</h4>
+<p>
+    <strong>5 hours</strong>
+</p>
+
+<hr/>
+
+
+<h4>Description</h4>
+<p>
+    In this part of Word Play we will write several methods that will form the basis for the game. These
+    methods will be defined in a class called Model. Specific problem descriptions are provided as comments in the
+    handout code and can be seen after cloning the repository.
+</p>
+
+<hr/>
+<h4>Testing</h4>
+<p>
+    The repository includes a Testing class that can be used to test your code without having to submit through AutoLab.
+    This class contains one call to the first method for the assignment and you are strongly encouraged to add your own
+    test cases for all the other methods as well. When you submit to AutoLab it will give you a know test case that is
+    used while grading for each method that is not correct. You should add these test cases to your Testing class to
+    streamline your testing process. This allows you to run the Testing class to check your code instead of creating a
+    jar and submitting on AutoLab for every check.
+</p>
+
+<hr/>
+<h4>Submission</h4>
+<p>
+    Submit a jar file of your project under "Word Play - Part 1" on
+    <a href="https://autograder.cse.buffalo.edu/courses/cse115-f17/assessments/wordplaypart1">AutoLab</a>.
+    Remember to check the correct boxes in the jar file export dialog.
+</p>
+
+
+
+
+

@@ -1,0 +1,82 @@
+---
+short_title: names
+---
+
+== Uses of names
+
+<p>
+Names are used for many things in a program, among them:
+</p>
+<ul>
+    <li>variables</li>
+    <li>methods</li>
+    <li>classes</li>
+    <li>packages</li>
+</ul>
+
+== Rules for identifiers
+
+<p>
+Technically a name is called
+an <span class="vocabulary">identifier</span>.  There are some hard
+and fast rules we must follow when creating identifiers.  They are a
+little more intricate than we need to worry about for now (but you can
+read <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-3.8">the
+gory details</a>).  For our purposes the following simplification will do:
+</p>
+
+<ul>
+    <li>Identifiers can contain UPPERCASE letters ('A' through 'Z'), lowercase letters ('a' through 'z'), digits ('0' through '9') and the underscore character ('_')</li>
+    <li>Identifiers cannot begin with a digit</li>
+    <li>Identifiers cannot be
+      <span><code class="java">true</code></span>,
+      <span><code class="java">false</code></span>,
+      <span><code class="java">null</code></span>,
+      or any <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-3.html#jls-Keyword">Java keyword</a>.</li>
+</ul>
+
+See: 
+
+== Conventions for identifiers
+
+<p>
+We use conventions to improve the readability of code.
+</p>
+
+<p>
+Because identifiers cannot contain spaces multiword indentifiers can be difficult to read.  Two common strategies to help programmers read and segment identifier names are:
+</p>
+<ul>
+<li>separate distinct words in identifers by underscore characters</li>
+<pre>
+<code class="java">this_is_a_long_name</code>
+<code class="java">THIS_IS_A_DIFFERENT_LONG_NAME</code>
+</pre>
+
+<li>use camelCase</li>
+<pre>
+<code class="java">thisIsAnotherLongName</code>
+<code class="java">ThisIsOurLastExampleOfALongName</code>
+</pre>
+</ul>
+
+== Conventions for variables
+
+<p>
+We use different conventions for different types of variables:
+</p>
+<ul>
+<li>local variables (includes parameters)</li>
+<blockquote>
+<i>camelCase</i>
+</blockquote>
+<li>instance variables</li>
+<blockquote>
+<i>camelCase or _camelCase</i>
+</blockquote>
+<li>static variables</li>
+<blockquote>
+<i>UPPER_CASE</i>
+</blockquote>
+</ul>
+

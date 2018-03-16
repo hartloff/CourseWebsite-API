@@ -1,0 +1,736 @@
+---
+title: Projects
+short_title: hw
+next_content_short: none
+previous_content_short: lab
+---
+
+
+== Project Submissions
+
+
+<p>
+    For all of the projects, and later labs, you will be submitting you entire eclipse project as a .jar (Java Archive)
+    file instead of submitting a single .java file. This is necessary when submitting a project with code in multiple
+    files.
+</p>
+
+<p>
+    To create a .jar file in Eclipse:
+</p>
+
+<ol>
+    <li>
+        In the left sidebar, right click on your project and select "export"
+    </li>
+    <li>
+        In the export wizard window, choose "JAR file" from he "Java" folder and click next
+    </li>
+    <li>
+        On the next screen, make sure the following boxes are checked
+        <ul>
+            <li>"Export generated class and files and resources"</li>
+            <li>"Export Java source files and resources"</li>
+            <li>"Compress the contents of the JAR file"</li>
+            <li>"Add directory entries"</li>
+        </ul>
+    </li>
+    <li>
+        Make sure the correct project is selected, choose a location to save your file, then click finish to create the
+        .jar file containing your entire project
+    </li>
+    <li>
+        Submit this .jar file to AutoLab
+    </li>
+</ol>
+
+<p>
+    You may submit as many times as you'd like until the deadline. Only your last submission will be counted towards
+    your grade. If your score decreases while you are working on a new objective you can always resubmit your previous
+    jar file to get your completed objective back.
+</p>
+
+<p>
+    You progress on the progress objectives will not be reflected on the course website. Your project scores will only
+    be shown in AutoLab as this page is only for information.
+</p>
+
+<p>
+    <strong>All Projects are Due: Friday, May 18th @ 11:59 pm</strong>
+</p>
+
+<p>
+    * There will be no support from the course staff during finals week
+</p>
+
+
+== Ratings
+
+<h4>
+    Background
+</h4>
+
+<p>
+    Rating systems are all around us. Whether we are shopping online, looking for a place to eat, or deciding which
+    movie
+    to see many of us will search for other people's opinions before we decide how to spend our time and money. In
+    this assignment we will explore different aspects of ratings while building our own system where we
+    can share and analyze preferences.
+</p>
+
+<p>
+    By the end of this project we will analyzing ratings of song that have been made by this class of CSE115 student.
+    Add your ratings using this the form below and you will compute the top rated songs in the class by objective 5.
+</p>
+
+
+<br/>
+<hr/>
+<h4>Rate Songs</h4><br/>
+
+<p>
+    Use this form to rate songs find the classes favorite songs. Aggregate results will appear here:
+    <a href="http://fury.cse.buffalo.edu/api/musicRatings/getAllSongs">http://fury.cse.buffalo.edu/api/musicRatings/getAllSongs</a>
+</p>
+
+<p>
+    Each rated song must be linked to a YouTube video by providing the id for the video. This id is an 11 digit String
+    that is unique for each video and can be found in the url
+    of the video. See <a href="https://docs.joeworkman.net/rapidweaver/stacks/youtube/video-id">here</a> for an example.
+</p>
+
+<p>
+    * You must be logged in to rate songs
+</p>
+
+<div class="card">
+    <div class="card-body">
+        <form action="/api/musicRatings/rateSong" method="post">
+
+            <div>
+                <label>YouTube ID (11 digit id from url):</label>
+                <input type="text" name="youtube_id"/>
+            </div>
+            <br/>
+            <div>
+                <label>Your Rating:</label>&nbsp;
+                <input type="radio" name="rating" value="1"> 1 &nbsp;&nbsp;
+                <input type="radio" name="rating" value="2"> 2&nbsp;&nbsp;
+                <input type="radio" name="rating" value="3"> 3&nbsp;&nbsp;
+                <input type="radio" name="rating" value="4"> 4&nbsp;&nbsp;
+                <input type="radio" name="rating" value="5"> 5
+            </div>
+            <br/>
+            <label>* Artist and Title are only required if the song is not yet in the API</label><br/>
+            <div>
+                <label>Artist:</label>
+                <input type="text" name="artist"/>
+            </div>
+
+            <div>
+                <label>Title:</label>
+                <input type="text" name="title"/>
+            </div>
+
+            <div>
+                <input type="submit" value="Rate Song"/>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<br/>
+<hr/>
+<h4>
+    Objective 1: Bayesian Average
+</h4>
+<br/>
+<p>
+    Your first objective in this project is to compute the Bayesian average for a given list of ratings. The Bayesian
+    average is computed by adding a fixed number of extra ratings at a certain value to the existing ratings.
+</p>
+
+<h5>Background</h5>
+<p>
+    By
+    comparing items based on their Bayesian average, as opposed to directly using the average of all review scores, we
+    can improve the usefulness of these comparisons. For example, in a 5 star rating system an item with 1 rating of 5
+    stars will be ranked higher than an item with 200 ratings at an average rating of 4.9. Most
+    likely we would prefer the later item since we can be more confident that it is a highly rated item since there are
+    200 opinions being considered. To address this we can rank the items by their
+    Bayesian rating and choose 5 extra ratings of 3 stars to be added to each item. Now the
+    first item has 1 rating of 5 and 5 ratings of 3 for a Bayesian average of 3.33 and the
+    second item has 200 ratings at an average of 4.9 and 5 ratings of 3 for a Bayesian
+    average of 4.85. Bayesian averages can be used in this way to lower ratings where
+    there is not enough information to make a judgment on the item.
+</p>
+
+<h5>Tasks</h5>
+
+<p>
+    Setup the structure for this project and write a method to compute the Bayesian average of a list of ratings.
+</p>
+
+<ol>
+    <li>Create a new project in Eclipse that will contain you work for all 5 objectives</li>
+    <li>Create a new package in the src folder named "ratings"</li>
+    <li>In the ratings package, create a new class named "Main" and write a main method in this class. This class
+        will be the entry point for the project and will be the only class with a main method. You should use this class
+        to test your project
+    </li>
+    <li>Create a class named "RatingsAnalyzer" in the ratings package. In this new class, write a public static
+        method named "bayesianAverage" that takes three parameters (an ArrayList of Doubles, an int, then a double) and
+        returns a double. The first parameter represents all the ratings for a particular item, the second parameter is
+        the
+        number of additional ratings to add, and the third parameter is the value of these additional ratings. The
+        return
+        value is the bayesian average of these ratings based on these parameters.
+    </li>
+</ol>
+
+
+<br/>
+<hr/>
+<h4>
+    Objective 2: Find the Best Song
+</h4>
+
+<p>
+    Now that we can compute the Bayesian average of a list of ratings we can start computing ratings.
+    The first ratings that we'll compute will be of songs. For this objective you will be given a csv file with song
+    ratings and you'll compute the song with the highest Bayesian average.
+</p>
+
+
+<a href="/static/data/sample_songs.csv">sample_songs.csv</a><br/>
+<a href="/static/data/large_songs.csv">large_songs.csv</a><br/>
+
+<h5>Tasks</h5>
+
+<p>
+    Create a Song class, create Song instances based on data read from a file, and compute the Song with the highest
+    Bayesian average.
+</p>
+
+<ol>
+    <li>Create a package named "ratables" inside the ratings package. In the newly created ratables package, create a
+        class named "Song" containing the following methods. Note that none of these methods are static since they will
+        belong
+        to
+        instances of the Song class and not the class itself:
+        <ol type="i">
+            <li>
+                A public constructor taking three Strings as parameters in the order (youTubeID, artist, title). These
+                values must be stored in instance variables of your choosing
+            </li>
+            <li>
+                A public method named "getID" that takes no parameters and returns the youTubeID that was provided when
+                the constructor was called as a String
+            </li>
+            <li>
+                A public method named "getLink" that takes no parameters and return the YouTube url for this song as a
+                String. The url must be in the format "https://www.youtube.com/watch?v=###########" with ###########
+                replaced with the youTubeID for this song
+            </li>
+            <li>
+                A public method named "getDescription" that takes no parameters and returns a String containing the
+                artist and title provided
+                when the constructor was called. The format of this description must be "artist - title", as in the
+                artist of the song then the title of the song separated by the String " - "
+            </li>
+            <li>
+                A public method named "addRating" that takes a double as a parameter and returns void. The double
+                represents a rating made for this song which must be stored in an instance variable. Note that this
+                method will be called each time a new rating in found for the same song and all ratings must be stored
+                in an instance variable
+            </li>
+            <li>
+                A public method named "getRatings" that takes no parameters and returns an ArrayList of Doubles
+                containing every rating that was added to this song with the addRating method
+            </li>
+            <li>[optional] You may add any other methods or instance variables that will help you complete the project
+                objectives. For example, it is helpful to override the toString method so you can print out songs
+                while testing your program to verify the output
+            </li>
+        </ol>
+    </li>
+    <li>
+        Create a new class in the ratings package named "DataSources" that will contains methods that read data into our
+        program. In this class write a public static method named "readSongCSVFile"
+        that takes one String as a parameter and returns an ArrayList of Songs. The input parameter is the name of a
+        csv file containing song ratings where each line is in the format "YouTubeID,artist,title,rating"
+        This method will return all the data in this file in an ArrayList of Songs.
+        Note that songs can be rated multiple times in the file and each rating must be recorded in the same Song
+        object that represents that song. (Hint: The YouTubeIDs are unique and can be used to identify a song and can
+        stored in a data structure to check if you've seen a song multiple times. For each line that is read from the
+        file, check if the YouTubeID from the line is already in your data structure. If it is, the rating needs to be
+        added to the existing Song instead of creating a new Song object. One way to do this is by using a HashMap
+        of YouTubeIDs (Strings) to Song objects)
+    </li>
+    <li>
+        In the RatingsAnalyzer class write a public static method named "bestSong" that takes three parameters (an
+        ArrayList of Songs,
+        an int, and a double) and returns a Song. The method will return the Song from the parameter ArrayList with the
+        highest Bayesian average. The int and double parameters are the number of extra reviews and the value of those
+        reviews to be used while computing the Bayesian averages (You should call your method from objective 1 to
+        compute these Bayesian averages)
+    </li>
+</ol>
+
+
+<br/>
+<hr/>
+<h4>
+    Objective 3: Abstraction and Products
+</h4>
+
+<p>
+    So far our program can find the best song by bayesian average, but what if we want to rate more than just songs?
+    In this objective we will refactor our code so it can also be used for Amazon.com products. To do this we will
+    create an abstract class that will be extended by both Song and Product classes. With this structure we can easily
+    expand our program to rate anything we'd like by writing another class that extends our abstract class and
+    implements its methods.
+</p>
+
+<a href="/static/data/sample_products.csv">sample_products.csv</a><br/>
+<a href="/static/data/large_products.csv">large_products.csv</a><br/>
+
+<p>
+    Amazon data provided by:<br/>
+    Ups and downs: Modeling the visual evolution of fashion trends with one-class collaborative filtering
+    R. He, J. McAuley
+    WWW, 2016
+    <br/>
+    <br/>
+    Image-based recommendations on styles and substitutes
+    J. McAuley, C. Targett, J. Shi, A. van den Hengel
+    SIGIR, 2015
+</p>
+
+<h5>Tasks</h5>
+<ol>
+    <li>In the ratables package create an abstract class named "Ratable" containing the following. Note that none of
+        these methods are static:
+        <ol type="i">
+            <li>
+                A public default constructor (take no parameters). This constructor will be implicitly called whenever
+                an extending classes constructor is called. You can use this constructor to initialize and instance
+                variables that are needed by all sub-classes (ex. An ArrayList of Doubles storing all the ratings)
+            </li>
+            <li>
+                A public abstract method named "getID" that takes no parameters and returns a String. This method will
+                be used to return a unique id for any type of Ratable
+            </li>
+            <li>
+                A public abstract method named "getLink" that takes no parameters and returns a String. This method will
+                be used to return a url for any type of Ratable
+            </li>
+            <li>
+                A public abstract method named "getDescription" that takes no parameters and returns a String. This
+                method will be used to a description for any type of Ratable
+            </li>
+            <li>
+                A public method named "addRating" that takes a double as a parameter and returns void. The double
+                represents a rating made for this ratable which must be stored in an instance variable. Note this method
+                is identical to the one from the Song class. The method is being moved from Song to Ratable
+            </li>
+            <li>
+                A public method named "getRatings" that takes no parameters and returns an ArrayList of Doubles
+                containing every rating that was added to this ratable with the addRating method. Note this method
+                is identical to the one from the Song class. The method is being moved from Song to Ratable
+            </li>
+            <li>
+                [optional] You may add any other methods or instance variables that will help you complete the project
+                objectives. For example, it is helpful to override the toString method so you can print out ratables
+                while testing your program to verify the output
+            </li>
+        </ol>
+    </li>
+    <li>Modify the Song class to extend the Ratable abstract class
+        <ol type="i">
+            <li>Extend Ratable from Song using the extends keyword</li>
+            <li>Remove the addRating and getRatings methods from the Song class. Since Song now extends Ratable, and
+                Ratable defines these methods, each Song will inherit these methods from the Ratable class
+            </li>
+            <li>Note that since we already defined the three abstract methods from the Ratable class in the Song class
+                there is no more work needed to extend Ratable from Song. However, depending on your previous
+                implementation you may have to make a few more changes as needed (ex. Remove a line where you create a
+                new ArrayList for the ratings)
+            </li>
+        </ol>
+    </li>
+
+    <li>In the ratables package create a class named "Product" that extends Ratable and containing the following:
+        <ol type="i">
+            <li>
+                A public constructor that takes 1 String as a parameter. This string represents the asin (Amazon
+                Standard
+                Identification Number) of the product and it should be stored in an instance variable
+            </li>
+            <li>
+                Implement the getID method to return the asin that was provided in the constructor call
+            </li>
+            <li>
+                Implement the getLink method to return a link to the product page for this product. The format of this
+                url
+                must be "https://www.amazon.com/dp/##########" where ########## is the asin for this product
+            </li>
+            <li>
+                Implement the getDescription method to return the asin for this product. Note that this is the same as
+                the
+                getID method
+            </li>
+            <li>
+                Now that we've implemented the 3 abstract methods we have completed this class
+            </li>
+        </ol>
+    </li>
+    <li>
+        Now that we've refactored the our ratables to be either songs or products we will need to write methods in the
+        rest of our program that will handle and ratables. To start, whenever we read data from a source we will return
+        the data as Ratables instead of Songs or Products. For this task, write a public static method in the
+        DataSources class
+        named "readSongsAsRatables" that takes a String as a parameter and returns an ArrayList of Ratables. This method
+        will read a csv file with Song ratings in the same format as in the readSongCSVFile method. The only difference
+        is the return type which is an ArrayList of Ratables instead of an ArrayList of Songs. (Hint: you can call
+        readSongCSVFile from this method and add all the Songs into a new ArrayList of Ratables)
+    </li>
+    <li>
+        Write a public static method in the DataSources class named "readProductCSVFile" that takes a String as a
+        parameter and
+        returns an ArrayList of Ratables. The input String is the name of a csv file where each line is in the format
+        "asin,reviewerName,rating,review" and the output is an ArrayList of Ratables containing all the product ratings
+        from this file.
+    </li>
+    <li>
+        In the RatingsAnalyzer class write a public static method named "bestRatable" that takes three parameters (an
+        ArrayList of
+        Ratable,
+        an int, and a double) and returns a Ratable. The method will return the Ratable from the parameter ArrayList
+        with the
+        highest Bayesian average. The int and double parameters are the number of extra reviews and the value of those
+        reviews to be used while computing the Bayesian averages. Note that this method can be used for Songs or
+        Products.
+    </li>
+</ol>
+
+
+<br/>
+<hr/>
+<h4>
+    Objective 4: Top k Lists
+</h4>
+<p>
+    We have a lot of structure in place for our project are we have the flexibility to write code that can be used for
+    Songs, Products, and any other class that we add as long as it extends Ratable. For this objective we now want to
+    analyze the ratings beyond just finding the Ratable with highest Bayesian average.
+</p>
+
+<h5>Tasks</h5>
+
+<ol>
+    <li>Write three Comparator classes for Ratables
+        <ol type="i">
+            <li>In the ratings package create a new package named "comparators"</li>
+            <li>In the comparators package create a new class named AlphabeticalComparator that implements the
+                Comparator of
+                Ratable interface. Implement the compare method to order the ratables alphabetically, ignoring case,
+                according to their descriptions (Use the getDescription method)
+            </li>
+            <li>In the comparators package create a new class named NumberOfRatingsComparator that implements the
+                Comparator of
+                Ratable interface. Implement the compare method to order the ratables by the number of reviews for each
+                ratable in decreasing order
+            </li>
+            <li>In the comparators package create a new class named BayesianAverageComparator that implements the
+                Comparator of
+                Ratable interface. Implement the compare method to order the ratables by their bayesian average in
+                decreasing order. For this class you will need a constructor that takes an int and a double as
+                parameters
+                representing the number of extra ratings and the value of these ratings and store these values in
+                instance
+                variables so they can be used in the compare method
+            </li>
+        </ol>
+    </li>
+    <li>In the RatingsAnalyzer class write a public static method named "getTopK" an ArrayList of Ratables, an int (k),
+        and a
+        Comparator of Ratables as
+        parameters and returns an ArrayList of Ratables. This method returns the top k ratables from the ArrayList based
+        on the provided Comparator. This method
+        must return the list in order such that the first element is the first ratable according to the provided
+        Comparator. Ties can be broken arbitrarily
+    </li>
+</ol>
+
+<p>
+    While testing you top k method you should write code in your Main class that calls a method from your DataSources
+    class to get an ArrayList of Ratables and call getTopK with this ArrayList.
+</p>
+
+<br/>
+<hr/>
+<h4>
+    Objective 5: The Internet
+</h4>
+
+<p>
+    So far we've been reading data from csv files that are saved on our hard drive. Our next objective to access song
+    data that is hosted on the Internet through a web API and use the data in our program. This will allow us to work
+    with real-time data that is constantly updating
+</p>
+
+<h5>Task</h5>
+
+<ol>
+    <li>Write a public static method in the DataSources class named "getSongsFromAPI" that takes no parameters and
+        returns an
+        ArrayList of Ratables. This method will access the API endpoint at the url
+        "http://fury.cse.buffalo.edu/api/musicRatings/getAllSongs"
+        which will return a JSON array where each element in the array is a JSON object in the format
+        {"title":"No Regrets", "artist":"Aesop Rock", "ratings":[5,5,4,5], "youtubeID":"sClhmDN5Fcs"}. The method will
+        return all the data given by the API in an ArrayList of Ratables
+    </li>
+</ol>
+
+
+<br/>
+<hr/>
+<h4>
+    Debriefing
+</h4>
+
+<p>
+    Congratulations! You have written a complete project that analyzes ratings of
+    songs and Amazon products. This program has the flexibility to read songs from a file, products from a file, or
+    songs from a web API and generate top k lists based on their bayesian averages, number of ratings, or
+    alphabetically. By this point you should see that this project can be expanded to rate more types of ratables from
+    other sources or by different criteria without adding much additional code. By using object-oriented principles
+    we are able to reuse significant amounts of code even if our goals change significantly. For example, we used the
+    same exact code to add/store ratings, compare ratable, and generate top k lists based on any of three different
+    criteria whether we were analyzing Amazon product reviews from a csv file or song ratings from a web API.
+</p>
+
+
+<!--== RhymeBot-->
+
+<!--<h4>-->
+<!--Background-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 1:-->
+<!--</h4>-->
+<!--<br/>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Background</h5>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<p>-->
+<!--Setup the structure for this project and write a method to...-->
+<!--</p>-->
+
+<!--<ol>-->
+<!--<li>Create a new project in Eclipse</li>-->
+<!--<li>Create a new package in the src folder named "rhymes"</li>-->
+<!--<li>In the rhymes package, create a new class named "Main" and write a main method in this class. This class-->
+<!--will be the entry point for the project and will be the only class with a main method. You should use this class-->
+<!--to test your project-->
+<!--</li>-->
+<!--<li>-->
+<!--</li>-->
+<!--</ol>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 2:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li>-->
+<!--</li>-->
+
+<!--</ol>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 3:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+<!--<ul>-->
+<!--<li></li>-->
+<!--</ul>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 4:-->
+<!--</h4>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li></li>-->
+<!--<li></li>-->
+<!--</ol>-->
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 5:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li></li>-->
+<!--</ol>-->
+
+
+<!--== Flight Tracker-->
+
+
+<!--<h4>-->
+<!--Background-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 1:-->
+<!--</h4>-->
+<!--<br/>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Background</h5>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<p>-->
+<!--Setup the structure for this project and write a method to...-->
+<!--</p>-->
+
+<!--<ol>-->
+<!--<li>Create a new project in Eclipse</li>-->
+<!--<li>Create a new package in the src folder named "flights"</li>-->
+<!--<li>In the flights package, create a new class named "Main" and write a main method in this class. This class-->
+<!--will be the entry point for the project and will be the only class with a main method. You should use this class-->
+<!--to test your project-->
+<!--</li>-->
+<!--</ol>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 2:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li>-->
+<!--</li>-->
+
+<!--</ol>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 3:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+<!--<ul>-->
+<!--<li></li>-->
+<!--</ul>-->
+
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 4:-->
+<!--</h4>-->
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li></li>-->
+<!--<li></li>-->
+<!--</ol>-->
+
+<!--<br/>-->
+<!--<hr/>-->
+<!--<h4>-->
+<!--Objective 5:-->
+<!--</h4>-->
+
+<!--<p>-->
+
+<!--</p>-->
+
+<!--<h5>Tasks</h5>-->
+
+<!--<ol>-->
+<!--<li></li>-->
+<!--</ol>-->
