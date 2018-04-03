@@ -5,7 +5,8 @@ var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/hci-api');
 
-var collection = db.get('course_content');
+var collection_courses = db.get('courses');
+var collection_content = db.get('course_content');
 var collection_instructors = db.get('instructors');
 var collection_instructor_assignments = db.get('instructor-assignments');
 var collection_oh = db.get('office-hours');
@@ -29,76 +30,144 @@ router.get('/', function (req, res) {
 
 
 router.get('/course-list', function (req, res) {
-	var to_send = [];
-
 	collection.find({}, {sort: {semester_index: -1, number: 1}}, function (err, data) {
 		if (err || !data) {
 			var message = "Error getting course-list: " + JSON.stringify(err);
 			console.log(message);
 			res.send(message)
 		} else {
-			//console.log(JSON.stringify(data, null, 2));
 
-			for (var i = 0; i < data.length; i++) {
-				var raw_course = data[i];
-				var course = {};
-
-				copy_course_fields(course, raw_course);
-
-				to_send.push(course);
-			}
-
-			res.send(JSON.stringify(to_send));
+			res.send(JSON.stringify(data));
 		}
 	});
 
 });
 
 
-function copy_course_fields(destination, raw_course) {
-	destination.course_id = raw_course.course_id;
-	destination.course_number = raw_course.course_number;
-	destination.semester = raw_course.semester;
-	destination.title = raw_course.title;
-}
 
-/**
- {
-  "course_id": <string>,        # unique id for each course
-  "course_number": <string>,    # "cse250"
-  "semester": <string>,         # "s18" 'u' for summer courses
-  "title": <string>,            # "Data Structures"
-  "all_content":
-  [
-   {
-	"type": <string>,               # ex. "assignments", "lectures", "labs", "slides", "syllabus"
-	"content":
-	 [
-	  {
-	   "content_id": <string>,     # unique within the course. ex. "hw2", "arrays_lecture"
-	   "content_title": <string>,  # ex. "Homework 2: Arrays in Practice"
-	   "due_date": <string>,       # [optional] if this doesn't exists then no due date should be displayed
-	   "section_id": <string>,      # [optional] present if the content only applies to a particular section
-	   "section_group_id": <string> # [optional] present if the content only applies to a particular subsection
-	  },
-	  ...
-	 ]
-   },
-   ...
-  ],
-  "modules":
-  [
-   {},...
-   # Custom modules that can be added to the course. Might be future tech. Previously implemented with flags as seen below
-   # "use_student_account": true,
-   # "student_options": false,
-   # "has_project": false,
-   # "use_autolab": true,
-   # "questions_enabled": true,
-   # "message": ""
-  ]
- }
- */
+
+router.post('/update-course', function (req, res) {
+	var required_fields = ["course_id", "course_number", "semester", "title"];
+	var optional_fields = [];
+	verify_post(req, required_fields, optional_fields, function (err, inputs) {
+		if (err) {
+			res.send(JSON.stringify({"message": err}));
+		} else {
+			var message = "";
+			collection.findOne({course_id: inputs.course_id}, {}, function (err, data) {
+				if (err) {
+					message = "Error: " + JSON.stringify(err);
+					console.log(message);
+					res.send(JSON.stringify({"message": message}));
+				} else if (!data) {
+					collection_courses.insert(inputs, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				} else {
+					collection_courses.update({course_id: inputs.course_id}, {$set: inputs}, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				}
+			});
+		}
+	});
+});
+
+
+
+
+
+router.get('/content/:content_id', function (req, res) {
+	collection_content.find({content_id:req.params.content_id}, function (err, data) {
+		if (err || !data) {
+			var message = "Error getting course-list: " + JSON.stringify(err);
+			console.log(message);
+			res.send(message)
+		} else {
+			res.send(JSON.stringify(data));
+		}
+	});
+
+});
+
+
+
+
+router.post('/update-content', function (req, res) {
+	var required_fields = ["content_id", "title", "url", "text_content", "type", "category", "status", "format", "start_timestamp", "referenced_sections"];
+	var optional_fields = ["end_timestamp", "due_timestamp", "referenced_sections"];
+	verify_post(req, required_fields, optional_fields, function (err, inputs) {
+		if (err) {
+			res.send(JSON.stringify({"message": err}));
+		} else {
+			var message = "";
+			collection.findOne({course_id: inputs.content_id}, {}, function (err, data) {
+				if (err) {
+					message = "Error: " + JSON.stringify(err);
+					console.log(message);
+					res.send(JSON.stringify({"message": message}));
+				} else if (!data) {
+					collection_content.insert(inputs, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				} else {
+					collection_content.update({content_id: inputs.content_id}, {$set: inputs}, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				}
+			});
+		}
+	});
+});
+
+
+
+
+router.get('/course/:course_id', function (req, res) {
+	collection_courses.findOne({course_id: req.params.course_id}, function (err, raw_course) {
+		if (err || !raw_course) {
+			var message = "Error getting data for course " + req.params.course_id + ": " + JSON.stringify(err);
+			console.log(message);
+			res.send(message);
+		} else {
+			collection_content.find({course_id: req.params.course_id}, function (err, data) {
+				if (err || !data) {
+					var message = "Error getting course-content: " + JSON.stringify(err);
+					console.log(message);
+					res.send(message)
+				} else {
+					res.send(JSON.stringify(data));
+				}
+			});
+		}
+	});
+});
+
+
+router.get('/course/:course_id/:category', function (req, res) {
+	collection_courses.findOne({course_id: req.params.course_id}, function (err, raw_course) {
+		if (err || !raw_course) {
+			var message = "Error getting data for course " + req.params.course_id + ": " + JSON.stringify(err);
+			console.log(message);
+			res.send(message);
+		} else {
+			collection_content.find({course_id: req.params.course_id, category:req.params.category}, function (err, data) {
+				if (err || !data) {
+					var message = "Error getting course-content by category: " + JSON.stringify(err);
+					console.log(message);
+					res.send(message)
+				} else {
+					res.send(JSON.stringify(data));
+				}
+			});
+		}
+	});
+});
+
+
+
+
+
 router.get('/course/:course_id', function (req, res) {
 	collection.findOne({course_id: req.params.course_id}, {_id: 0, semester_index: 0}, function (err, raw_course) {
 		if (err || !raw_course) {
@@ -497,7 +566,7 @@ router.post('/remove-office-hour', function (req, res) {
 });
 
 
-function verify_post(req, required_fields, next) {
+function verify_post(req, required_fields, optional_fields, next) {
 	var messages = "";
 	var inputs = {};
 	for (var i = 0; i < required_fields.length; i++) {
@@ -505,6 +574,11 @@ function verify_post(req, required_fields, next) {
 			messages += "\"" + required_fields[i] + "\" is required for this request";
 		} else {
 			inputs[required_fields[i]] = req.body[required_fields[i]];
+		}
+	}
+	for (var j = 0; j < optional_fields.length; j++) {
+		if (req.body[optional_fields[j]]) {
+			inputs[required_fields[j]] = req.body[required_fields[j]];
 		}
 	}
 	if (!req.body.api_key || req.body.api_key != "fourwordsalluppercase") {
