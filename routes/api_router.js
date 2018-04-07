@@ -94,8 +94,8 @@ router.get('/content/:content_id', function (req, res) {
 
 
 router.post('/update-content', function (req, res) {
-	var required_fields = ["content_id", "title", "url", "text_content", "type", "category", "status", "format", "start_timestamp", "referenced_sections"];
-	var optional_fields = ["end_timestamp", "due_timestamp", "referenced_sections"];
+	var required_fields = ["content_id", "course_id", "title", "text_content", "type", "category", "status", "format", "start_timestamp"];
+	var optional_fields = ["end_timestamp", "url", "due_timestamp", "referenced_sections"];
 	verify_post(req, required_fields, optional_fields, function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
