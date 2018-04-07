@@ -54,7 +54,7 @@ router.post('/update-course', function (req, res) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
 			var message = "";
-			collection.findOne({course_id: inputs.course_id}, {}, function (err, data) {
+			collection_courses.findOne({course_id: inputs.course_id}, {}, function (err, data) {
 				if (err) {
 					message = "Error: " + JSON.stringify(err);
 					console.log(message);
