@@ -46,6 +46,36 @@ router.get('/course-list', function (req, res) {
 
 
 
+router.post('/update-course', function (req, res) {
+	var required_fields = ["course_id", "course_number", "semester", "title"];
+	var optional_fields = [];
+	verify_post(req, required_fields, optional_fields, function (err, inputs) {
+		if (err) {
+			res.send(JSON.stringify({"message": err}));
+		} else {
+			var message = "";
+			collection.findOne({course_id: inputs.course_id}, {}, function (err, data) {
+				if (err) {
+					message = "Error: " + JSON.stringify(err);
+					console.log(message);
+					res.send(JSON.stringify({"message": message}));
+				} else if (!data) {
+					collection_courses.insert(inputs, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				} else {
+					collection_courses.update({course_id: inputs.course_id}, {$set: inputs}, function (err) {
+						res.send(JSON.stringify({"message": "success"}));
+					});
+				}
+			});
+		}
+	});
+});
+
+
+
+
 
 router.get('/content/:content_id', function (req, res) {
 	collection_content.find({content_id:req.params.content_id}, function (err, data) {
