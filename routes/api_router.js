@@ -185,7 +185,7 @@ router.get('/instructors', function (req, res) {
 
 router.post('/add-instructor', function (req, res) {
 	var required_fields = ["instructor_id", "type", "name", "email"];
-	verify_post(req, required_fields, function (err, inputs) {
+	verify_post(req, required_fields, [], function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
@@ -218,7 +218,7 @@ router.post('/add-instructor', function (req, res) {
 
 router.post('/assign-instructor', function (req, res) {
 	var required_fields = ["instructor_id", "course_id"];
-	verify_post(req, required_fields, function (err, inputs) {
+	verify_post(req, required_fields, [], function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
@@ -243,7 +243,7 @@ router.post('/assign-instructor', function (req, res) {
 
 router.post('/unassign-instructor', function (req, res) {
 	var required_fields = ["instructor_id", "course_id"];
-	verify_post(req, required_fields, function (err, inputs) {
+	verify_post(req, required_fields, [], function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
@@ -293,7 +293,7 @@ router.get('/office-hours/:course_id', function (req, res) {
 
 router.post('/add-office-hour', function (req, res) {
 	var required_fields = ["instructor_id", "course_id", "weekday", "location", "time_start", "time_end"];
-	verify_post(req, required_fields, function (err, inputs) {
+	verify_post(req, required_fields, [], function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
@@ -306,7 +306,7 @@ router.post('/add-office-hour', function (req, res) {
 
 router.post('/remove-office-hour', function (req, res) {
 	var required_fields = ["instructor_id", "course_id", "weekday", "time_start"];
-	verify_post(req, required_fields, function (err, inputs) {
+	verify_post(req, required_fields, [], function (err, inputs) {
 		if (err) {
 			res.send(JSON.stringify({"message": err}));
 		} else {
